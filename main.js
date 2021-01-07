@@ -14,13 +14,13 @@ const criarTarefa = (evento) => {
 
     evento.preventDefault();
 
-    const tarefa = inputTarefa.value;
+    const texto = inputTarefa.value;
     const data = inputDate.value;
 
     const { dataBR, horario } = textoParaData(data);
 
     const dados = {
-        tarefa,
+        texto,
         dataBR,
         horario
     }
@@ -31,7 +31,9 @@ const criarTarefa = (evento) => {
 
     localStorage.setItem('tarefas', JSON.stringify(tarefasArray));
 
-    criarUmElementoTarefa(dados);
+    ordenarTarefas(tarefasArray);
+
+    criarUmElementoTarefa(tarefasArray);
 
     limparCampos();
 }
@@ -42,35 +44,42 @@ const limparCampos = () => {
     inputDate.value = "";
 }
 
-const criarUmElementoTarefa = ({ tarefa, dataBR, horario }) => {
+const criarUmElementoTarefa = (tarefas) => {
 
-    const li = document.createElement('li');
-    li.classList.add('task');
+    lista.innerHTML = "";
 
-    const conteudo = `<p class="content">${dataBR} * ${horario} * ${tarefa}</p>`;
-
-    li.innerHTML = conteudo;
-
-    li.appendChild(BotaoConclui());
-    li.appendChild(BotaoDeleta());
-    lista.appendChild(li);
-}
-
-const criarElementosTarefas = (tarefasArray) => {
-
-    tarefasArray.forEach(tarefa => {
+    tarefas.forEach(tarefa => {
 
         const li = document.createElement('li');
         li.classList.add('task');
 
-        const conteudo = `<p class="content">${tarefa.dataBR} * ${tarefa.horario} * ${tarefa.tarefa}</p>`;
-
-        li.innerHTML = conteudo;
+        li.innerHTML = `<p class="content">${tarefa.horario} * ${tarefa.texto}</p>`;
 
         li.appendChild(BotaoConclui());
         li.appendChild(BotaoDeleta());
-        lista.appendChild(li);
+
+        const sectionDate = getDateSection(tarefa.dataBR)
+        sectionDate.appendChild(li);
+        lista.appendChild(sectionDate)
     })
+}
+
+const getDateSection = (dataBR) => {
+
+    const getElementDOM = $(`[data-section="${dataBR}"]`);
+
+    if (getElementDOM) {
+        return getElementDOM;
+    }
+    else {
+        const sectionDate = document.createElement('section')
+        sectionDate.classList.add('sectionDate')
+        sectionDate.setAttribute("data-section", `${dataBR}`)
+
+        sectionDate.innerHTML = `<h1 class="section__title">${dataBR}</h1>`
+
+        return sectionDate;
+    }
 }
 
 const getTarefasLocalStorage = () => {
@@ -78,12 +87,23 @@ const getTarefasLocalStorage = () => {
     return JSON.parse(localStorage.getItem('tarefas'));
 }
 
-const onloadWindow = () => {
-
-    const tarefasArray = getTarefasLocalStorage() || [];
-    criarElementosTarefas(tarefasArray);
-}
-
-window.addEventListener('load', onloadWindow);
-
 novaTarefa.addEventListener('click', criarTarefa);
+
+window.addEventListener('load', () => {
+
+    const tarefas = getTarefasLocalStorage();
+
+    if (tarefas.lenght === 0) {
+        criarUmElementoTarefa(tarefas);
+    }
+    else {
+        criarUmElementoTarefa(ordenarTarefas(tarefas));
+    }
+
+
+})
+
+const ordenarTarefas = (tarefas) => {
+
+    return tarefas.sort((a, b) => dataParaTexto(a.dataBR) - dataParaTexto(b.dataBR))
+}

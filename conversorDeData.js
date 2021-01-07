@@ -2,8 +2,6 @@ const textoParaData = (data) => {
 
     const datatime = new Date(data);
 
-    console.log(datatime.toLocaleTimeString());
-
     const objDatatime = {
         dia: datatime.getDate(),
         mes: datatime.getMonth() + 1,
@@ -13,7 +11,7 @@ const textoParaData = (data) => {
     }
 
     const dataBR = `${objDatatime.dia}/${objDatatime.mes}/${objDatatime.ano}`
-    const horario = `${objDatatime.hora}:${objDatatime.minuto}`
+    const horario = `${objDatatime.hora}:${formatarMinutos(objDatatime.minuto)}`
 
     return {
         dataBR,
@@ -23,8 +21,13 @@ const textoParaData = (data) => {
 
 const dataParaTexto = (data) => {
 
+    const [dia, mes, ano] = data.split("/");
+    return new Date(dia, mes, ano);
+}
 
-    return
+const formatarMinutos = (minuto) => {
+
+    return minuto < 10 ? `0${minuto}` : `${minuto}`;
 }
 
 export {
