@@ -1,6 +1,6 @@
 import BotaoConclui from './concluiTarefa.js'
 import BotaoDeleta from './deletaTarefa.js'
-import { textoParaData, dataParaTexto } from '../conversorDeData.js'
+import { textoParaData, dataParaTexto } from '../service/conversorDeData.js'
 
 const $ = document.querySelector.bind(document);
 
