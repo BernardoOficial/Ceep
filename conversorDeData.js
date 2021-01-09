@@ -10,11 +10,11 @@ const textoParaData = (data) => {
         minuto: datatime.getMinutes(),
     }
 
-    const dataBR = `${objDatatime.dia}/${objDatatime.mes}/${objDatatime.ano}`
+    const dataFormatada = `${objDatatime.dia}/${objDatatime.mes}/${objDatatime.ano}`
     const horario = `${objDatatime.hora}:${formatarMinutos(objDatatime.minuto)}`
 
     return {
-        dataBR,
+        dataFormatada,
         horario
     }
 }

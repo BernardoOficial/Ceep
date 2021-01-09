@@ -1,19 +1,23 @@
-const BotaoDeleta = () => {
+import { criarUmElementoTarefa, ordenarTarefas } from '../componentes/criarTarefa.js'
+
+const BotaoDeleta = (id) => {
 
     const botaoDeleta = document.createElement('button');
-    botaoDeleta.innerText = 'deletar';
-    botaoDeleta.addEventListener('click', deletarTarefa);
+    botaoDeleta.innerText = 'Deletar';
+    botaoDeleta.addEventListener('click', () => deletarTarefa(id));
 
     return botaoDeleta;
 }
 
-const deletarTarefa = (evento) => {
+const deletarTarefa = (id) => {
 
-    const botaoDeleta = evento.target;
-    const tarefaCompleta = botaoDeleta.parentElement;
-    tarefaCompleta.remove();
+    let tarefas = JSON.parse(localStorage.getItem('tarefas'));
 
-    return botaoDeleta;
+    tarefas.splice(id, 1);
+
+    criarUmElementoTarefa(ordenarTarefas(tarefas));
+
+    localStorage.setItem('tarefas', JSON.stringify(tarefas));
 }
 
 export default BotaoDeleta;
